@@ -1,16 +1,37 @@
-# This is a sample Python script.
+import dbutils
+from PIL import Image
+import pytesseract
+import openai
 
-# Press ⌃R to execute it or replace it with your code.
-# Press Double ⇧ to search everywhere for classes, files, tool windows, actions, and settings.
+openai.organization = "org-87S7CpTnHb0kAdCaM9m5NorN"
+OPENAI_API_KEY = "INSERT_API_KEY_HERE"
+openai.api_key = OPENAI_API_KEY
+openai.Model.list()
 
+uploaded_file = "/FileStore/tables/question_screenshot_example.PNG"
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press ⌘F8 to toggle the breakpoint.
+#Copy from Databricks Community Edition DBFS to accessible /tmp directory
+dbutils.fs.cp(uploaded_file, "file:///tmp/question_screenshot_example")
 
+# File location and type
+file_location = "/tmp/question_screenshot_example"
+raw_text = pytesseract.image_to_string(Image.open(file_location))
+chunks = raw_text.split('\n')
+print(raw_text)
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+question = chunks[0]
+question = question.lstrip('0123456789.- ')
+print(question)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+response = openai.Completion.create(
+    model="gpt-3.5-turbo",
+    prompt=question,
+    temperature=0,
+    max_tokens=100,
+    top_p=1,
+    frequency_penalty=0.0,
+    presence_penalty=0.0,
+    stop=["\n"]
+)
+
+print(response)
