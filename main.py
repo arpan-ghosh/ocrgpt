@@ -1,11 +1,12 @@
 import dbutils
-from PIL import Image
-import pytesseract
 import openai
+from PIL import Image
 import pprint
+import pytesseract
+
+OPENAI_API_KEY = "INSERT_API_KEY_HERE"
 
 openai.organization = "org-87S7CpTnHb0kAdCaM9m5NorN"
-OPENAI_API_KEY = "INSERT_API_KEY_HERE"
 openai.api_key = OPENAI_API_KEY
 openai.Model.list()
 
