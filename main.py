@@ -1,7 +1,7 @@
 import dbutils
+from lib.utility import debug_print
 import openai
 from PIL import Image
-import pprint
 import pytesseract
 
 OPENAI_API_KEY = "INSERT_API_KEY_HERE"
@@ -11,9 +11,6 @@ openai.api_key = OPENAI_API_KEY
 openai.Model.list()
 
 uploaded_file = "/FileStore/tables/question_screenshot_example.PNG"
-
-def debug_print(value):
-    pprint.PrettyPrinter().pprint(value)
 
 def get_image():
     image_file_location = "/tmp/question_screenshot_example"
@@ -53,6 +50,6 @@ def ask_chatgpt(question):
 
 if __name__ == "__main__":
     copy_sourcefile()
-    data = ocr_to_text(get_image())
+    chunks = ocr_to_text(get_image())
     question = parse_question(chunks)
     ask_chatgpt(question)
