@@ -1,5 +1,9 @@
+import dbutils
 import pprint
 import re
+
+UPLOADED_FILE = "/FileStore/tables/question_screenshot_example.PNG"
+DATABRICKS_FILE_LOCATION = 'file:///tmp/question_screenshot_example'
 
 def debug_print(value):
     pprint.PrettyPrinter().pprint(value)
@@ -9,6 +13,10 @@ def read_file(source_file):
         data = file.read()
         debug_print(data)
         return data
+
+#Copy from Databricks Community Edition DBFS to accessible /tmp directory
+def copy_sourcefile():
+    dbutils.fs.cp(UPLOADED_FILE, DATABRICKS_FILE_LOCATION)
 
 def parse_question_answer_parentheses(question_text):
     questions = re.split(r'\n\s*\n', question_text) #splits the questions into a list assuming there is no empty lines inside each question

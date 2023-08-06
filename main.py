@@ -1,5 +1,5 @@
 import dbutils
-from lib.utility import debug_print
+from lib.utility import DATABRICKS_FILE_LOCATION, copy_sourcefile, debug_print
 import openai
 from PIL import Image
 import pytesseract
@@ -10,18 +10,12 @@ openai.organization = "org-87S7CpTnHb0kAdCaM9m5NorN"
 openai.api_key = OPENAI_API_KEY
 openai.Model.list()
 
-uploaded_file = "/FileStore/tables/question_screenshot_example.PNG"
-
 def get_image():
     image_file_location = "/tmp/question_screenshot_example"
     return image_file_location
 
-#Copy from Databricks Community Edition DBFS to accessible /tmp directory
-def copy_sourcefile():
-    dbutils.fs.cp(uploaded_file, "file:///tmp/question_screenshot_example")
-
 def ocr_to_text(image):
-    raw_text = pytesseract.image_to_string(Image.open(file_location))
+    raw_text = pytesseract.image_to_string(Image.open(DATABRICKS_FILE_LOCATION))
     chunks = raw_text.split('\n')
     debug_print(raw_text)
     return chunks
